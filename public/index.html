@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f7f9">
+<title>DeepSeek 聊天</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- 图标库 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4.5 12L20 5l-4 15-5.2-5.4L4.5 12z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10.8 14.6L20 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5h6v2M7 7l1 12h8l1-12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 15V5a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 6.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.4 1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="app" id="app">
+  <div class="scrim" id="scrim" hidden></div>
+
+  <!-- 会话抽屉 -->
+  <aside class="drawer" id="drawer" aria-label="会话列表" aria-hidden="true">
+    <div class="drawer-head">
+      <span class="brand brand-sm"><span class="brand-mark">D</span>对话</span>
+      <button class="icon-btn" id="drawer-close" aria-label="关闭会话列表">
+        <svg class="icon"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <button class="new-chat-btn" id="new-chat-drawer">
+      <svg class="icon"><use href="#i-plus"/></svg>新对话
+    </button>
+    <div class="conv-list" id="conv-list" role="list"></div>
+    <div class="drawer-foot">
+      <button class="link-btn" id="open-settings">
+        <svg class="icon"><use href="#i-gear"/></svg>设置
+      </button>
+      <span class="ver">DeepSeek Chat</span>
+    </div>
+  </aside>
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <button class="icon-btn" id="drawer-open" aria-label="打开会话列表">
+      <svg class="icon"><use href="#i-menu"/></svg>
+    </button>
+    <div class="brand">
+      <span class="brand-mark">D</span>
+      <span class="brand-text">DeepSeek</span>
+    </div>
+    <div class="model-switch" id="model-switch" role="tablist" aria-label="选择模型">
+      <button class="seg active" data-model="deepseek-chat" role="tab" aria-selected="true">通用</button>
+      <button class="seg" data-model="deepseek-reasoner" role="tab" aria-selected="false">深度思考</button>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="theme-toggle" aria-label="切换主题">
+        <svg class="icon" id="theme-icon"><use href="#i-sun"/></svg>
+      </button>
+      <button class="icon-btn" id="new-chat-top" aria-label="新对话">
+        <svg class="icon"><use href="#i-plus"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 消息区 -->
+  <main class="messages" id="messages" aria-live="polite"></main>
+
+  <!-- 输入区 -->
+  <footer class="composer">
+    <div class="composer-inner">
+      <textarea id="input" rows="1" maxlength="12000" placeholder="给 DeepSeek 发消息…" aria-label="消息输入框"></textarea>
+      <button class="send-btn" id="send" aria-label="发送" disabled>
+        <svg class="icon i-send"><use href="#i-send"/></svg>
+        <svg class="icon i-stop"><use href="#i-stop"/></svg>
+      </button>
+    </div>
+    <p class="disclaimer">AI 生成内容仅供参考 · Enter 发送 / Shift + Enter 换行</p>
+  </footer>
+</div>
+
+<!-- 访问密码 -->
+<div class="gate" id="gate" hidden>
+  <form class="gate-card" id="gate-form">
+    <div class="gate-icon"><svg class="icon"><use href="#i-gear"/></svg></div>
+    <h2>需要访问密码</h2>
+    <p>这个聊天页设置了访问密码，输入后即可开始聊天。</p>
+    <input type="password" id="gate-input" placeholder="访问密码" autocomplete="current-password" required>
+    <button type="submit" class="primary-btn">进入</button>
+    <p class="gate-error" id="gate-error" hidden></p>
+  </form>
+</div>
+
+<!-- 设置 -->
+<div class="panel" id="settings-panel" hidden>
+  <div class="panel-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="panel-head">
+      <h2 id="settings-title">设置</h2>
+      <button class="icon-btn" id="settings-close" aria-label="关闭设置">
+        <svg class="icon"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      <label class="field">
+        <span class="field-label">人设 / 系统提示词</span>
+        <textarea id="system-prompt" rows="4" maxlength="2000" placeholder="例如：你是一位耐心的中文老师，回答尽量简短。"></textarea>
+        <span class="field-hint">每次对话都会带上这段设定，可以留空。</span>
+      </label>
+      <div class="panel-actions">
+        <button class="ghost-btn" id="clear-all">清空所有对话</button>
+        <button class="primary-btn" id="save-settings">保存</button>
+      </div>
+      <p class="panel-note">聊天记录只存在这台设备的浏览器里，不会上传到服务器。</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="/markdown.js" defer></script>
+<script src="/app.js" defer></script>
+</body>
+</html>
